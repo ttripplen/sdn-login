@@ -4,6 +4,7 @@ const Category = require("../models/category");
 const Product = require("../models/product");
 const { default: mongoose } = require("mongoose");
 const router = express.Router();
+const UserRole = require("../enums/helper");
 
 //Authen
 const { verifyToken, authorizeRoles } = require("../middlewares/auth");
@@ -40,7 +41,7 @@ const productValidationRules = [
 ];
 
 // POST a new product
-router.post("/", verifyToken, authorizeRoles("admin"), productValidationRules, async (req, res) => {
+router.post("/", verifyToken, authorizeRoles(UserRole.ADMIN), productValidationRules, async (req, res) => {
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -104,7 +105,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // PUT update a product by id
-router.put("/:id", verifyToken, authorizeRoles("admin"), productValidationRules, async (req, res) => {
+router.put("/:id", verifyToken, authorizeRoles(UserRole.ADMIN), productValidationRules, async (req, res) => {
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -141,7 +142,7 @@ router.put("/:id", verifyToken, authorizeRoles("admin"), productValidationRules,
 });
 
 // DELETE a product by id
-router.delete("/:id", verifyToken, authorizeRoles("admin"), async (req, res) => {
+router.delete("/:id", verifyToken, authorizeRoles(UserRole.ADMIN), async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id))
       return res.status(404).send("Product not found");

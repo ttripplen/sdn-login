@@ -2,6 +2,7 @@ const express = require("express");
 const Category = require("../models/category");
 const Product = require("../models/product");
 const mongoose = require("mongoose");
+const UserRole = require("../enums/helper");
 const { body, validationResult } = require("express-validator");
 
 const router = express.Router();
@@ -22,7 +23,7 @@ const validationRules = [
 ];
 
 //POST
-router.post("/", verifyToken, authorizeRoles("admin"), validationRules, async (req, res) => {
+router.post("/", verifyToken, authorizeRoles(UserRole.ADMIN), validationRules, async (req, res) => {
   //Validate request body
   let errors = validationResult(req);
   if (!errors.isEmpty())
@@ -43,7 +44,7 @@ router.post("/", verifyToken, authorizeRoles("admin"), validationRules, async (r
 });
 
 //PUT
-router.put("/:id", verifyToken, authorizeRoles("admin"), validationRules, async (req, res) => {
+router.put("/:id", verifyToken, authorizeRoles(UserRole.ADMIN), validationRules, async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id))
       return res.status(404).send("Category not found");
@@ -131,7 +132,7 @@ router.get("/name/:name", async (req, res) => {
 
 
 //DELETE
-router.delete("/:id", verifyToken, authorizeRoles("admin"), async (req, res) => {
+router.delete("/:id", verifyToken, authorizeRoles(UserRole.ADMIN), async (req, res) => {
   try {
     let category = await Category.findByIdAndDelete(req.params.id);
     if (!category) return res.status(404).send("Category not found");

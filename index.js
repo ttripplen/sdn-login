@@ -28,7 +28,7 @@ app.use("/api/category", categoryRouter);
 app.use("/api/product", productRouter);
 
 //Authen
-app.use("api/user", userRouter)
+app.use("/api/user", userRouter)
 
 //Listen to port 3000
 let PORT = process.env.PORT || 5000;
