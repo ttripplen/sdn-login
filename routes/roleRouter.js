@@ -1,6 +1,8 @@
 const express = require("express");
 const Role = require("../models/role");
 const { body, validationResult } = require("express-validator");
+const { verifyToken, authorizeRoles } = require("../middlewares/auth");
+const UserRole = require("../enums/helper");
 
 const router = express.Router();
 
@@ -12,7 +14,7 @@ const roleValidationRules = () => [
 ];
 
 // Create a new role
-router.post("/", roleValidationRules(), async (req, res) => {
+router.post("/", verifyToken, authorizeRoles(UserRole.ADMIN), roleValidationRules(), async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -49,7 +51,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update a role
-router.put("/:id", roleValidationRules(), async (req, res) => {
+router.put("/:id", verifyToken, authorizeRoles(UserRole.ADMIN), roleValidationRules(), async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -64,7 +66,7 @@ router.put("/:id", roleValidationRules(), async (req, res) => {
 });
 
 // Delete a role
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, authorizeRoles(UserRole.ADMIN), async (req, res) => {
     try {
         const deletedRole = await Role.findByIdAndDelete(req.params.id);
         if (!deletedRole) return res.status(404).json({ message: "Role not found" });
