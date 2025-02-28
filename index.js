@@ -6,6 +6,7 @@ const app = express();
 const categoryRouter = require("./routes/categoryRouter");
 const productRouter = require("./routes/productRouter");
 const userRouter = require("./routes/userRouter");
+const roleRouter = require("./routes/roleRouter");
 
 //connect to mongodb
 mongoose
@@ -26,6 +27,9 @@ app.use("/api/category", categoryRouter);
 
 //CRUD product
 app.use("/api/product", productRouter);
+
+//CRUD role
+app.use("/api/role", roleRouter);
 
 //Authen
 app.use("/api/user", userRouter)

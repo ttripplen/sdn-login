@@ -9,6 +9,7 @@ const verifyToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.jwtPayload = decoded; // Assign user to request object
+        req.user = decoded; // Assign user to request object
         next();
     } catch (error) {
         res.status(401).json({ message: "Invalid token!" });
@@ -21,6 +22,7 @@ const authorizeRoles = (...roles) => {
         if (!user || !roles.includes(user.role.name)) {
             return res.status(403).json({ message: "You do not have permission to access this resource!" });
         }
+        req.user = user; // Assign the full user object to req.user
         next();
     };
 };

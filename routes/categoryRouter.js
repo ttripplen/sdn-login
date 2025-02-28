@@ -34,7 +34,13 @@ router.post("/", verifyToken, authorizeRoles(UserRole.ADMIN), validationRules, a
 
   //Create category
   try {
-    let category = new Category(req.body);
+    let category = new Category({
+      ...req.body,
+      createdBy: {
+        username: req.user.username,
+        role: req.user.role.name,
+      }
+    });
     let result = await category.save();
     res.status(201).send(result);
   } catch (err) {

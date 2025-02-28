@@ -10,6 +10,16 @@ const categorySchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    createdBy: {
+      username: {
+        type: String,
+        required: true,
+      },
+      role: {
+        type: String,
+        required: true,
+      }
+    }
   },
   {
     timestamps: true,
